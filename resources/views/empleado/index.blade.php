@@ -1,11 +1,23 @@
-Mostrar la lista de empleados :)
+@extends('layouts.app')
 
-@if(Session::has('mensaje'))
-{{ Session:: get('mensaje')}}
-@endif
+@section('content')
+<div class="container">
 
-<a href="{{ url('empleado/create') }}">Registrar nuevo empleado </a>
+<div class="alert alert-success alert-dismissible" role="alert">
+    @if(Session::has('mensaje'))
+    {{ Session:: get('mensaje')}}
+    @endif
 
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+
+<a href="{{ url('empleado/create') }}" class="btn btn-success">Registrar nuevo empleado </a>
+<br>
+<br>
 <table class="table table-light">
     <thead class="thead-light">
         <tr>
@@ -23,7 +35,7 @@ Mostrar la lista de empleados :)
             <td>{{$empleado-> id}}</td>
 
             <td>
-                <img src="{{ asset('storage').'/'.$empleado-> Foto}}" alt="" style="width: 200px; heigth:200px">
+                <img  class="img-thumbnail img-fluid" src="{{ asset('storage').'/'.$empleado-> Foto}}" alt="" style="width: 80px; heigth:80px">
             </td>
 
             <td>{{$empleado-> Nombre}}</td>
@@ -31,15 +43,15 @@ Mostrar la lista de empleados :)
             <td>{{$empleado-> Correo}}</td>
             <td>
                 
-            <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}">
+            <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}" class="btn btn-warning">
                 Editar
             </a>
             | 
             
-            <form action="{{ url('/empleado/'.$empleado->id) }}" method="post">
+            <form action="{{ url('/empleado/'.$empleado->id) }}" method="post" class="d-inline">
             @csrf
             {{ method_field('DELETE') }}
-            <input type="submit" value="Borrar" onclick="return confirm('¿Quieres borrar?')">
+            <input class="btn btn-danger" type="submit" value="Borrar" onclick="return confirm('¿Quieres borrar?')">
             
             </form>
         </td>
@@ -47,3 +59,5 @@ Mostrar la lista de empleados :)
         @endforeach
     </tbody>
 </table>
+</div>
+@endsection

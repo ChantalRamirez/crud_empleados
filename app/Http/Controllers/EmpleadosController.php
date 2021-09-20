@@ -40,6 +40,21 @@ class EmpleadosController extends Controller
     public function store(Request $request)
     {
         //
+        $campos=[
+            'Nombre'=>'required|string|max:100',
+            'Apellidos'=>'required|string|max:100',
+            'Correo'=>'required|email',
+            'Foto'=>'required|max:10000|mimes:jpeg,png,jpg',
+        ];
+        $mensaje=[
+            'required'=>'El :attribute es requerido',
+            'Apellidos.required'=>'Los :attribute son requeridos',
+            'Foto.required'=>'La foto es requerida'
+        ];
+
+        $this->validate($request, $campos, $mensaje);
+
+
         $datosEmpleado = request()->except('_token');
 
         if($request->hasFile('Foto')){
@@ -86,6 +101,25 @@ class EmpleadosController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $campos=[
+            'Nombre'=>'required|string|max:100',
+            'Apellidos'=>'required|string|max:100',
+            'Correo'=>'required|email',
+            
+        ];
+        $mensaje=[
+            'required'=>'El :attribute es requerido',
+            'Apellidos.required'=>'Los :attribute son requeridos',
+            
+        ];
+
+        if($request->hasFile('Foto')){
+            $campos=['Foto'=>'required|max:10000|mimes:jpeg,png,jpg'];
+            $mensaje=['Foto.required'=>'La foto es requerida'];
+        }
+
+        $this->validate($request, $campos, $mensaje);
+        
         $datosEmpleado = request()->except(['_token', '_method']);
 
         if($request->hasFile('Foto')){
@@ -99,7 +133,9 @@ class EmpleadosController extends Controller
         Empleados::where('id','=',$id)->update($datosEmpleado);
 
         $empleado=Empleados::findOrFail($id);
-        return view('empleado.edit', compact('empleado'));
+        //return view('empleado.edit', compact('empleado'));
+
+        return redirect('empleado')-> with('mensaje', 'Empleado modificado');
     }
 
     /**
@@ -118,6 +154,6 @@ class EmpleadosController extends Controller
             Empleados::destroy($id);
 
         }
-        return redirect('empleado')-> with('mensaje', 'Empleado eliminado');;
+        return redirect('empleado')-> with('mensaje', 'Empleado eliminado');
     }
 }
